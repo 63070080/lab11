@@ -1,5 +1,6 @@
 package com.example.productservice.query;
 
+import com.example.core.event.ProductReservedEvent;
 import com.example.productservice.core.ProductEntity;
 import com.example.productservice.core.data.ProductRepository;
 import com.example.productservice.core.event.ProductCreatedEvent;
@@ -18,6 +19,13 @@ public class ProductEventsHandler {
     public void on(ProductCreatedEvent event){
         ProductEntity productEntity = new ProductEntity();
         BeanUtils.copyProperties(event, productEntity);
+        productRepository.save(productEntity);
+    }
+
+    @EventHandler
+    public void on(ProductReservedEvent productReservedEvent){
+        ProductEntity productEntity = productRepository.findByProductId(productReservedEvent.getProductId());
+        productEntity.setQuantity(productEntity.getQuantity() - productReservedEvent.getQuantity());
         productRepository.save(productEntity);
     }
 }
