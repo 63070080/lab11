@@ -57,4 +57,9 @@ public class ProductAggregate {
         this.quantity = productCreatedEvent.getQuantity();
     }
 
+    @EventSourcingHandler
+    public void on(ProductReservedEvent productReservedEvent){
+        this.quantity -= productReservedEvent.getQuantity();
+    }
+
 }
